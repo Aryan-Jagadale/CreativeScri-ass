@@ -17,15 +17,13 @@ async function fetchPosts(word = "", page = 1,isLoadMoreClick = false) {
       url = `https://jsonplaceholder.typicode.com/posts?title_like=${word}&_page=${page}&_limit=${limit}`;
     }
 
-    if (!isLoadMoreClick && localStorage.getItem(`cachedData_${word}`)) {
+    if (!isLoadMoreClick && localStorage.getItem(`cachedData_${word}`) !== null) {
       const cachedTimestamp = Number(localStorage.getItem(`cachedData_${word}_timestamp`));
       const currentTime = new Date().getTime();
       const timeDifference = currentTime - cachedTimestamp;
       const cachedDataString = localStorage.getItem(`cachedData_${word}`);
-
-
-      if (timeDifference < CACHE_EXPIRATION_TIME) {
-        console.log(`Using cached data for '${word}'`);
+    
+      if (cachedDataString && timeDifference < CACHE_EXPIRATION_TIME) {
         const cachedData = JSON.parse(cachedDataString);
         return cachedData;
       }
